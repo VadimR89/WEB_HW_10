@@ -1,21 +1,36 @@
-{% extends "blog/base.html" %}
-{% load crispy_forms_tags %}
+{% extends "noteapp/base.html" %}
+
 {% block content %}
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Log in</legend>
-                {{ form|crispy }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline" type="submit">Login</button>
-            </div>
-        </form>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Need An Account? <a class="ml-2" href="{% url 'register' %}">Sing In</a>
-            </small>
-        </div>
+
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <div {% if message.tags %} class="alert-{{ message.tags }}" {% endif %}>{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<form action="{% url 'users:login' %}" method="post">
+    {% csrf_token %}
+    <div>
+        <label> Username:
+            {{ form.username }}
+        </label>
     </div>
-{% endblock content %}
+
+    <div>
+        <label>Password:
+            {{ form.password }}
+        </label>
+    </div>
+
+    <div class="grid">
+        <button type="submit">Submit</button>
+        <button type="reset" class="secondary">Reset</button>
+    </div>
+    <div class="small text-center">
+        <a href="{% url "users:password_reset" %}" class="text-center"><i>Forgot Password?</i></a>
+    </div>
+</form>
+
+{% endblock %}
